@@ -1,21 +1,17 @@
-package com.example.appgaleriaimagenes
+package com.example.appgaleriaimagenes.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appgaleriaimagenes.activities.FragmentsActivity
+import com.example.appgaleriaimagenes.R
 import com.example.appgaleriaimagenes.adapters.DogAdapter
-import com.example.appgaleriaimagenes.fragments.DetailFragment
-import com.example.appgaleriaimagenes.fragments.MainFragment
 import com.example.appgaleriaimagenes.http.ApiInterface
 import com.example.appgaleriaimagenes.models.Dog
 import com.example.appgaleriaimagenes.models.MessageResponse
@@ -25,8 +21,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
 
+class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var dogRecyclerView : RecyclerView
     private lateinit var dogAdapter : DogAdapter
@@ -34,41 +30,42 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        dogRecyclerView = findViewById(R.id.reclycles_dog)
+        dogRecyclerView.setOnClickListener{
+
+        }
+
+        /*RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.addOnItemTouchListener(
+            new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                @Override public void onItemClick(View view, int position) {
+                    // do whatever
+                }
+
+                @Override public void onLongItemClick(View view, int position) {
+                    // do whatever
+                }
+            })
+        );*/
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dogRecyclerView = view.findViewById(R.id.reclycles_dog)
         dogRecyclerView.setHasFixedSize(true)
 
         //dogRecyclerView.setLayoutManager(LinearLayoutManager(this))
-        dogRecyclerView.layoutManager =  LinearLayoutManager(this)
+        dogRecyclerView.layoutManager =  LinearLayoutManager(this.activity)
         //val dogs = getData1()
         //setAdapter(dogs)
         getData()
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_fragment, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-
-            R.id.menu_item_detail_fragment->{
-               var intent = Intent(this, FragmentsActivity::class.java)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun setAdapter(dogList:MutableList<Dog>){
         dogAdapter =  DogAdapter(dogList){ dog ->
-            Toast.makeText(this,"Dog Name: "+dog.name, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.activity,dog.name, Toast.LENGTH_SHORT).show()
         }
         dogRecyclerView.adapter = dogAdapter
     }
@@ -116,4 +113,6 @@ class MainActivity : AppCompatActivity() {
         )
         return lst
     }
+
+
 }
